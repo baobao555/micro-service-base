@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.baobao</groupId>
+    <artifactId>micro-service-base</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <description>微服务项目基础骨架</description>
+    <modules>
+        <module>service-common</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <!-- 引入SpringBoot的父依赖 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.13.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <hutool.version>5.7.14</hutool.version>
+        <spring.cloud.version>Hoxton.SR12</spring.cloud.version>
+        <spring.cloud.alibaba.version>2.2.0.RELEASE</spring.cloud.alibaba.version>
+        <knife4j.version>2.0.9</knife4j.version>
+        <mysql.driver.version>8.0.16</mysql.driver.version>
+        <lombok.version>1.18.20</lombok.version>
+        <springboot.version>2.2.13.RELEASE</springboot.version>
+        <minio.version>8.3.0</minio.version>
+        <okhttp.version>4.8.1</okhttp.version>
+        <easyexcel.version>2.2.11</easyexcel.version>
+        <zxing.version>3.3.3</zxing.version>
+        <aliyun.version>1.0.0</aliyun.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--spring cloud-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--spring cloud alibaba-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring.cloud.alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--阿里云-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>aliyun-spring-boot-dependencies</artifactId>
+                <version>${aliyun.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--mybatis-plus 持久层-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!--hutool工具包-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!--knife4j接口文档工具-->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-aggregation-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.driver.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <!--excel-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+            <!--minio-->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+            <!--二维码-->
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${zxing.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
