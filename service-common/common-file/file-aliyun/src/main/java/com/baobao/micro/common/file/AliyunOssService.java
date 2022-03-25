@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +35,7 @@ public class AliyunOssService {
 
     /**
      * 前端获取直传所需policy
-     * @param dir 指定上传到bucket中的哪个目录
+     * @param dir 指定上传到bucket中的哪个目录，开头不需要加/
      * @return policy
      */
     public AliyunOssPolicy getPolicy(String dir) {
@@ -75,5 +76,37 @@ public class AliyunOssService {
             log.error("获取policy失败", e);
             return null;
         }
+    }
+
+    /**
+     * 获取文件固定访问url(需要对bucket设置公共读)
+     * @param path 文件在bucket中的路径
+     * @return 固定url
+     */
+    public String getFixAccessUrl(String path) {
+        if (StrUtil.isBlank(path)) {
+            return null;
+        }
+        String bucketName = aliyunOssProperties.getBucket();
+        String endpoint = aliyunOssProperties.getEndpoint();
+        return "https://" + bucketName + "." + endpoint + "/" + path;
+    }
+
+    /**
+     * 获取文件临时访问url(bucket设置为私有时)
+     * @param path 文件在bucket中的路径
+     * @return 临时url
+     */
+    public String getTempAccessUrl(String path) {
+        if (StrUtil.isBlank(path)) {
+            return null;
+        }
+        String bucketName = aliyunOssProperties.getBucket();
+        Integer tempUrlExpire = aliyunOssProperties.getTempUrlExpire();
+        // 设置URL过期时间
+        Date expiration = new Date(System.currentTimeMillis() + tempUrlExpire * 1000);
+        // 生成以GET方法访问的签名URL，访客可以直接通过浏览器访问相关内容。其中objectName即文件在Bucket中的路径
+        URL url = ossClient.generatePresignedUrl(bucketName, path, expiration);
+        return url.toString();
     }
 }

@@ -23,4 +23,6 @@ public class AliyunOssProperties {
     private String policyCallback;
     /**前端直传policy有效期(秒)*/
     private Integer policyExpire;
+    /**文件临时url有效期(秒)*/
+    private Integer tempUrlExpire;
 }

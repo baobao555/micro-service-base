@@ -10,6 +10,7 @@
     <description>微服务项目基础骨架</description>
     <modules>
         <module>service-common</module>
+        <module>goods-micro-service</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -25,7 +26,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
-        <hutool.version>5.7.14</hutool.version>
+        <hutool.version>5.7.22</hutool.version>
         <spring.cloud.version>Hoxton.SR12</spring.cloud.version>
         <spring.cloud.alibaba.version>2.2.0.RELEASE</spring.cloud.alibaba.version>
         <knife4j.version>2.0.9</knife4j.version>
@@ -37,10 +38,19 @@
         <easyexcel.version>2.2.11</easyexcel.version>
         <zxing.version>3.3.3</zxing.version>
         <aliyun.version>1.0.0</aliyun.version>
+        <idempotent.version>0.0.7</idempotent.version>
+        <mica.version>2.1.1-GA</mica.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>net.dreamlu</groupId>
+                <artifactId>mica-bom</artifactId>
+                <version>${mica.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!--spring cloud-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -74,8 +84,10 @@
             <!--hutool工具包-->
             <dependency>
                 <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
+                <artifactId>hutool-bom</artifactId>
                 <version>${hutool.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <!--knife4j接口文档工具-->
             <dependency>
@@ -123,6 +135,12 @@
                 <groupId>com.google.zxing</groupId>
                 <artifactId>core</artifactId>
                 <version>${zxing.version}</version>
+            </dependency>
+            <!--幂等工具-->
+            <dependency>
+                <groupId>com.pig4cloud.plugin</groupId>
+                <artifactId>idempotent-spring-boot-starter</artifactId>
+                <version>${idempotent.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
