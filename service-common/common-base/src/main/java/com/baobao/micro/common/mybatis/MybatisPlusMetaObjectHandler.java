@@ -38,19 +38,19 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
             }
         }
         // 判断实体类是否有createBy属性
-        /*if(metaObject.hasSetter(CREATE_BY_PROPERTY_NAME)){
+        if(metaObject.hasSetter(CREATE_BY_PROPERTY_NAME)){
             if (this.getFieldValByName(CREATE_BY_PROPERTY_NAME, metaObject) == null) {
-                String userId = UserInfoHolder.getUserInfo() == null ? "" : UserInfoHolder.getUserInfo().getId();
-                this.strictInsertFill(metaObject, CREATE_BY_PROPERTY_NAME, String.class, userId);
+                // String userId = UserInfoHolder.getUserInfo() == null ? "" : UserInfoHolder.getUserInfo().getId();
+                this.strictInsertFill(metaObject, CREATE_BY_PROPERTY_NAME, String.class, "");
             }
-        }*/
+        }
         // 判断实体类是否有updateBy属性
-        /*if(metaObject.hasSetter(UPDATE_BY_PROPERTY_NAME)){
+        if(metaObject.hasSetter(UPDATE_BY_PROPERTY_NAME)){
             if (this.getFieldValByName(UPDATE_BY_PROPERTY_NAME, metaObject) == null) {
-                String userId = UserInfoHolder.getUserInfo() == null ? "" : UserInfoHolder.getUserInfo().getId();
-                this.strictInsertFill(metaObject, UPDATE_BY_PROPERTY_NAME, String.class, userId);
+                // String userId = UserInfoHolder.getUserInfo() == null ? "" : UserInfoHolder.getUserInfo().getId();
+                this.strictInsertFill(metaObject, UPDATE_BY_PROPERTY_NAME, String.class, "");
             }
-        }*/
+        }
     }
 
     @Override
@@ -63,11 +63,11 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
             }
         }
         // 判断实体类是否有updateBy属性
-        /*if(metaObject.hasSetter(UPDATE_BY_PROPERTY_NAME)){
+        if(metaObject.hasSetter(UPDATE_BY_PROPERTY_NAME)){
             if (this.getFieldValByName(UPDATE_BY_PROPERTY_NAME, metaObject) == null) {
-                String userId = UserInfoHolder.getUserInfo() == null ? "" : UserInfoHolder.getUserInfo().getId();
-                this.strictInsertFill(metaObject, UPDATE_BY_PROPERTY_NAME, String.class, userId);
+                // String userId = UserInfoHolder.getUserInfo() == null ? "" : UserInfoHolder.getUserInfo().getId();
+                this.strictInsertFill(metaObject, UPDATE_BY_PROPERTY_NAME, String.class, "");
             }
-        }*/
+        }
     }
 }

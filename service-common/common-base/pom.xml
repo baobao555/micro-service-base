@@ -44,10 +44,10 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
         <!--redis-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -83,6 +83,11 @@
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-xss</artifactId>
+        </dependency>
+        <!--redis封装-->
+        <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-redis</artifactId>
         </dependency>
     </dependencies>
 

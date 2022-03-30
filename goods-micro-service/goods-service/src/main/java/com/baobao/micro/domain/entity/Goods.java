@@ -1,6 +1,6 @@
 package com.baobao.micro.domain.entity;
 
-import com.baobao.micro.common.domain.BaseEntity;
+import com.baobao.micro.common.domain.CreateUpdateUserBaseEntity;
 import com.baobao.micro.domain.enums.GoodsTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -16,10 +16,11 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("goods")
-public class Goods extends BaseEntity {
+public class Goods extends CreateUpdateUserBaseEntity {
     @TableField("name")
     private String name;
 

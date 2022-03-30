@@ -1,13 +1,12 @@
 package com.baobao.micro.controller.backend;
 
+import com.baobao.micro.common.domain.PageVO;
 import com.baobao.micro.common.domain.Result;
-import com.baobao.micro.domain.entity.Goods;
 import com.baobao.micro.domain.query.GoodsQuery;
 import com.baobao.micro.domain.to.GoodsAddTO;
 import com.baobao.micro.domain.to.GoodsUpdateTO;
 import com.baobao.micro.domain.vo.backend.GoodsListVO;
 import com.baobao.micro.service.GoodsService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -62,9 +61,10 @@ public class GoodsBackendController {
     }
 
     @GetMapping("listPage/{pageNum}/{pageSize}")
-    public Result<Page<Goods>> listPage(@PathVariable("pageNum") @Min(value = 1, message = "页码必须大于0") @ApiParam(value = "页码", required = true) Integer pageNum,
-                                        @PathVariable("pageSize") @Min(value = 1, message = "每页数据量必须大于0") @ApiParam(value = "每页数据量", required = true) Integer pageSize,
-                                        GoodsQuery query) {
+    @ApiOperation("分页条件查询商品")
+    public Result<PageVO<GoodsListVO>> listPage(@PathVariable("pageNum") @Min(value = 1, message = "页码必须大于0") @ApiParam(value = "页码", required = true) Integer pageNum,
+                                          @PathVariable("pageSize") @Min(value = 1, message = "每页数据量必须大于0") @ApiParam(value = "每页数据量", required = true) Integer pageSize,
+                                          GoodsQuery query) {
         return Result.success(goodsService.listPage(pageNum, pageSize, query));
     }
 }

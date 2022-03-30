@@ -1,12 +1,9 @@
 package com.baobao.micro.common.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -18,8 +15,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
-@Builder
 public class BaseEntity {
 	/**主键*/
 	@TableId(value = "id", type = IdType.AUTO)
@@ -27,21 +22,11 @@ public class BaseEntity {
 
 	/**创建时间*/
 	@TableField(fill = FieldFill.INSERT)
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
 	private Date createTime;
-
-	/**创建人*/
-	@TableField(value = "create_by", fill = FieldFill.INSERT)
-	private String createBy;
 
 	/**更新时间*/
 	@TableField(fill = FieldFill.INSERT_UPDATE)
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
 	private Date updateTime;
-
-	/**更新人*/
-	@TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
-	private String updateBy;
 
 	/**逻辑删除字段*/
 	@TableField(value = "is_deleted", select = false)

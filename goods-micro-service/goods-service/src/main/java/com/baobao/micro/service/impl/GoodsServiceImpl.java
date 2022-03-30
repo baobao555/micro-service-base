@@ -2,6 +2,7 @@ package com.baobao.micro.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baobao.micro.common.domain.PageVO;
 import com.baobao.micro.domain.entity.Goods;
 import com.baobao.micro.domain.query.GoodsQuery;
 import com.baobao.micro.domain.to.GoodsAddTO;
@@ -13,6 +14,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.dreamlu.mica.redis.cache.MicaRedisCache;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +28,9 @@ import java.util.List;
  */
 @Service
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsService {
+    @Autowired
+    private MicaRedisCache redisCache;
+
     @Override
     public void add(GoodsAddTO to) {
         Goods goods = BeanUtil.copyProperties(to, Goods.class);
@@ -38,6 +45,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
+    @Cacheable(cacheNames = "goods", key = "'list2'")
     public List<GoodsListVO> list(GoodsQuery query) {
         LambdaQueryWrapper<Goods> wrapper = this.buildQueryWrapper(query);
         List<Goods> goodsList = this.list(wrapper);
@@ -45,11 +53,13 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public Page<Goods> listPage(Integer pageNum, Integer pageSize, GoodsQuery query) {
+    public PageVO<GoodsListVO> listPage(Integer pageNum, Integer pageSize, GoodsQuery query) {
         LambdaQueryWrapper<Goods> wrapper = this.buildQueryWrapper(query);
         Page<Goods> page = new Page<>(pageNum, pageSize);
         this.page(page, wrapper);
-        return page;
+        PageVO<GoodsListVO> pageVO = BeanUtil.copyProperties(page, PageVO.class, "records");
+        pageVO.setRecords(BeanUtil.copyToList(page.getRecords(), GoodsListVO.class));
+        return pageVO;
     }
 
     private LambdaQueryWrapper<Goods> buildQueryWrapper(GoodsQuery query) {

@@ -1,11 +1,11 @@
 package com.baobao.micro.service;
 
+import com.baobao.micro.common.domain.PageVO;
 import com.baobao.micro.domain.entity.Goods;
 import com.baobao.micro.domain.query.GoodsQuery;
 import com.baobao.micro.domain.to.GoodsAddTO;
 import com.baobao.micro.domain.to.GoodsUpdateTO;
 import com.baobao.micro.domain.vo.backend.GoodsListVO;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -43,5 +43,5 @@ public interface GoodsService extends IService<Goods> {
      * @param query 查询条件
      * @return 商品列表
      */
-    Page<Goods> listPage(Integer pageNum, Integer pageSize, GoodsQuery query);
+    PageVO<GoodsListVO> listPage(Integer pageNum, Integer pageSize, GoodsQuery query);
 }

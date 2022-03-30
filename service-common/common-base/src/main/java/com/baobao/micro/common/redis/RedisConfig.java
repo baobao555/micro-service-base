@@ -1,13 +1,7 @@
 package com.baobao.micro.common.redis;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -17,9 +11,9 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.*;
-
-import java.time.Duration;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * @author baobao
@@ -36,6 +30,7 @@ public class RedisConfig {
      * @return RedisTemplate
      */
     @Bean
+    @ConditionalOnMissingClass("net.dreamlu.mica.redis.config.MicaRedisCacheAutoConfiguration")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
@@ -59,6 +54,7 @@ public class RedisConfig {
      * @return CacheManager
      */
     @Bean
+    @ConditionalOnMissingClass("net.dreamlu.mica.redis.config.MicaRedisCacheAutoConfiguration")
     public CacheManager cacheManager(RedisConnectionFactory factory) {
         // key的序列化器为string
         StringRedisSerializer keySer = new StringRedisSerializer();
@@ -66,13 +62,12 @@ public class RedisConfig {
         GenericJackson2JsonRedisSerializer valueSer = new GenericJackson2JsonRedisSerializer();
         // 配置序列化（解决乱码的问题）,过期时间600秒
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofSeconds(600))
+                //.entryTtl(Duration.ofSeconds(600))
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySer))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSer))
                 .disableCachingNullValues();
-        RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
+        return RedisCacheManager.builder(factory)
                 .cacheDefaults(config)
                 .build();
-        return cacheManager;
     }
 }
