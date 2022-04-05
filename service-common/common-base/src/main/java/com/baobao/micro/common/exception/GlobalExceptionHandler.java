@@ -2,6 +2,7 @@ package com.baobao.micro.common.exception;
 
 
 import com.baobao.micro.common.domain.Result;
+import com.pig4cloud.plugin.idempotent.exception.IdempotentException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.dao.DuplicateKeyException;
@@ -70,8 +71,9 @@ public class GlobalExceptionHandler {
 
     /**
      * 参数非法异常
+     * 重复提交异常
      */
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class, IdempotentException.class})
     public Result<Void> handleIllegalArgumentException(IllegalArgumentException e) {
         log.error(e.getMessage(), e);
         return Result.error(e.getMessage());

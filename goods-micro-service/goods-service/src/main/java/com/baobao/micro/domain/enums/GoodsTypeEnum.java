@@ -22,4 +22,32 @@ public enum GoodsTypeEnum {
     @EnumValue
     private final int code;
     private final String desc;
+
+    /**
+     * 判断对应描述的枚举是否存在
+     * @param desc 描述
+     * @return
+     */
+    public static boolean contains(String desc) {
+        for (GoodsTypeEnum value : GoodsTypeEnum.values()) {
+            if (value.getDesc().equals(desc)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 根据描述获取枚举实例
+     * @param desc 描述
+     * @return 实例
+     */
+    public static GoodsTypeEnum get(String desc) {
+        for (GoodsTypeEnum value : GoodsTypeEnum.values()) {
+            if (value.getDesc().equals(desc)) {
+                return value;
+            }
+        }
+        return null;
+    }
 }

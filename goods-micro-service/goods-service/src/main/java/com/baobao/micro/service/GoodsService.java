@@ -5,8 +5,10 @@ import com.baobao.micro.domain.entity.Goods;
 import com.baobao.micro.domain.query.GoodsQuery;
 import com.baobao.micro.domain.to.GoodsAddTO;
 import com.baobao.micro.domain.to.GoodsUpdateTO;
+import com.baobao.micro.domain.vo.backend.GoodsExcelVO;
 import com.baobao.micro.domain.vo.backend.GoodsListVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.pig4cloud.plugin.excel.vo.ErrorMessage;
 
 import java.util.List;
 
@@ -44,4 +46,18 @@ public interface GoodsService extends IService<Goods> {
      * @return 商品列表
      */
     PageVO<GoodsListVO> listPage(Integer pageNum, Integer pageSize, GoodsQuery query);
+
+    /**
+     * 导出商品信息
+     * @param query 查询条件
+     * @return 商品excel信息
+     */
+    List<GoodsExcelVO> export(GoodsQuery query);
+
+    /**
+     * 导入商品信息
+     * @param excelVOList 导入数据
+     * @return 导入校验失败信息
+     */
+    List<ErrorMessage> importGoods(List<GoodsExcelVO> excelVOList);
 }

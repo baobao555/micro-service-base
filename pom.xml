@@ -35,12 +35,11 @@
         <springboot.version>2.2.13.RELEASE</springboot.version>
         <minio.version>8.3.0</minio.version>
         <okhttp.version>4.8.1</okhttp.version>
-        <easyexcel.version>2.2.11</easyexcel.version>
         <zxing.version>3.3.3</zxing.version>
         <aliyun.version>1.0.0</aliyun.version>
         <idempotent.version>0.0.7</idempotent.version>
         <mica.version>2.1.1-GA</mica.version>
-        <myexcel.version>4.0.1</myexcel.version>
+        <excel.version>1.1.1</excel.version>
     </properties>
 
     <dependencyManagement>
@@ -116,14 +115,9 @@
             </dependency>
             <!--excel-->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>easyexcel</artifactId>
-                <version>${easyexcel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.liaochong</groupId>
-                <artifactId>myexcel</artifactId>
-                <version>${myexcel.version}</version>
+                <groupId>com.pig4cloud.excel</groupId>
+                <artifactId>excel-spring-boot-starter</artifactId>
+                <version>${excel.version}</version>
             </dependency>
             <!--minio-->
             <dependency>

@@ -1,16 +1,23 @@
 package com.baobao.micro.controller.backend;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baobao.micro.common.domain.PageVO;
 import com.baobao.micro.common.domain.Result;
 import com.baobao.micro.domain.query.GoodsQuery;
 import com.baobao.micro.domain.to.GoodsAddTO;
 import com.baobao.micro.domain.to.GoodsUpdateTO;
+import com.baobao.micro.domain.vo.backend.GoodsExcelVO;
 import com.baobao.micro.domain.vo.backend.GoodsListVO;
 import com.baobao.micro.service.GoodsService;
+import com.pig4cloud.plugin.excel.annotation.RequestExcel;
+import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
+import com.pig4cloud.plugin.excel.vo.ErrorMessage;
+import com.pig4cloud.plugin.idempotent.annotation.Idempotent;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +41,7 @@ public class GoodsBackendController {
 
     @PostMapping
     @ApiOperation("添加商品")
+    @Idempotent(expireTime = 5)
     public Result<Void> add(@RequestBody @Valid GoodsAddTO to) {
         goodsService.add(to);
         return Result.success();
@@ -58,6 +66,24 @@ public class GoodsBackendController {
     @ApiOperation("条件查询商品")
     public Result<List<GoodsListVO>> list(GoodsQuery query) {
         return Result.success(goodsService.list(query));
+    }
+
+    @ResponseExcel(name = "商品信息")
+    @GetMapping("export")
+    @ApiOperation("导出商品")
+    public List<GoodsExcelVO> export(GoodsQuery query) {
+        return goodsService.export(query);
+    }
+
+    @PostMapping("import")
+    @ApiOperation("导入商品")
+    public Result<List<ErrorMessage>> importGoods(@RequestExcel List<GoodsExcelVO> excelVOList, BindingResult bindingResult) {
+        List<ErrorMessage> basicErrorMessageList = (List<ErrorMessage>) bindingResult.getTarget();
+        if (CollUtil.isNotEmpty(excelVOList)) {
+            List<ErrorMessage> customErrorMessageList = goodsService.importGoods(excelVOList);
+            basicErrorMessageList.addAll(customErrorMessageList);
+        }
+        return Result.success(basicErrorMessageList);
     }
 
     @GetMapping("listPage/{pageNum}/{pageSize}")
