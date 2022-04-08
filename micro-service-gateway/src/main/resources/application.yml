@@ -1,0 +1,26 @@
+server:
+  port: 9527
+spring:
+  application:
+    name: GATEWAY
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true  # 开启通过微服务名称进行动态路由功能
+      routes:
+        - id: GOODS
+          uri: lb://GOODS-SERVICE
+          predicates:
+            - Path=/gateway/goods/**
+          filters:
+            - StripPrefix=2  # 转发前去掉2级前缀
+
+        - id: ORDER
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/gateway/order/**
+          filters:
+            - StripPrefix=2

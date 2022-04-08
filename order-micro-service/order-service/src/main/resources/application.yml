@@ -1,0 +1,79 @@
+# 开头放与具体环境无关的通用配置
+server:
+  port: 12000
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ORDER-SERVICE
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false  # 空的对象序列化为json时不抛出错误
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false  # 将json字符串反序列化为对象时忽略在json字符串中存在但在java对象实际没有的属性，不抛出异常
+    default-property-inclusion: NON_NULL  # 将java对象序列化为json字符串时结果不包含对象中值为null的属性
+    parser:
+      ALLOW_UNQUOTED_FIELD_NAMES: true  # 解析json字符串时允许属性名称没有引号
+      ALLOW_SINGLE_QUOTES: true  # 解析json字符串时允许属性名称用单引号
+    date-format: yyyy-MM-dd HH:mm:ss  # 日期格式
+    time-zone: GMT+8  # 时区
+  servlet:
+    multipart:
+      max-file-size: 10MB # 文件上传最大10M
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-not-delete-value: 0
+      logic-delete-value: "null"
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-enums-package: com.baobao.**.enums
+
+feign:
+  client:
+    config:
+      default:
+        connectionTimeout: 3000
+        readTimeout: 3000
+  okhttp:
+    enabled: true
+
+swagger:
+  title: 订单微服务接口文档
+  description: 订单微服务相关接口
+  version: 1.0
+
+alibaba:
+  cloud:
+    access-key: aaa
+    secret-key: bbb
+    oss:
+      endpoint: ccc
+      bucket: ddd
+      policyExpire: 5
+      tempUrlExpire: 10
+
+
+# 另起文档，放与具体环境相关的配置(如数据库连接地址等等)
+---
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.109.153:3067/order?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true
+    username: root
+    password: root
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+  redis:
+    host: 192.168.109.153
+    password: abc123
+    database: 6
+    port: 6379
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

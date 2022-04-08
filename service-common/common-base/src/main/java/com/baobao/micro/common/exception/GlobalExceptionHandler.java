@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
      * 重复提交异常
      */
     @ExceptionHandler({IllegalArgumentException.class, IdempotentException.class})
-    public Result<Void> handleIllegalArgumentException(IllegalArgumentException e) {
+    public Result<Void> handleIllegalArgumentException(Exception e) {
         log.error(e.getMessage(), e);
         return Result.error(e.getMessage());
     }

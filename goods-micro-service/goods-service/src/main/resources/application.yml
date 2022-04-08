@@ -36,6 +36,16 @@ swagger:
   description: 商品微服务相关接口
   version: 1.0
 
+minio:
+  accessKey: admin
+  secretKey: 12345678
+  endpoint: http://192.168.109.153:9000
+  bucket: test
+  tempUrlExpire: 60
+  directUploadExpire: 600
+
+
+
 # 另起文档，放与具体环境相关的配置(如数据库连接地址等等)
 ---
 spring:

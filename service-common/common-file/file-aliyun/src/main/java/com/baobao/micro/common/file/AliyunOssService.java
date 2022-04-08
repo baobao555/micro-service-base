@@ -1,8 +1,10 @@
 package com.baobao.micro.common.file;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.cloud.spring.boot.context.condition.ConditionalOnAliCloudEndpoint;
-import com.aliyun.oss.OSSClient;
+import com.alibaba.cloud.spring.boot.context.env.AliCloudProperties;
+import com.aliyun.oss.OSS;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
@@ -13,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -28,10 +28,13 @@ import java.util.Date;
 @Slf4j
 public class AliyunOssService {
     @Autowired
-    private OSSClient ossClient;
+    private OSS ossClient;
 
     @Autowired
     private AliyunOssProperties aliyunOssProperties;
+
+    @Autowired
+    private AliCloudProperties aliCloudProperties;
 
     /**
      * 前端获取直传所需policy
@@ -40,7 +43,7 @@ public class AliyunOssService {
      */
     public AliyunOssPolicy getPolicy(String dir) {
         // 将文件分散到日期目录下
-        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now());
+        String date = DateUtil.format(new Date(), "yyyyMMdd");
         // 最终上传到bucket的路径为dir/日期/文件
         String finalDir;
         if (StrUtil.isBlank(dir)) {
@@ -66,7 +69,7 @@ public class AliyunOssService {
             String postSignature = ossClient.calculatePostSignature(postPolicy);
 
             return AliyunOssPolicy.builder()
-                    .accessid(ossClient.getCredentialsProvider().getCredentials().getAccessKeyId())
+                    .accessid(aliCloudProperties.getAccessKey())
                     .policy(encodedPolicy)
                     .signature(postSignature)
                     .dir(finalDir)

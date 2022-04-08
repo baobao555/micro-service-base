@@ -1,6 +1,7 @@
 package com.baobao.micro.service;
 
 import com.baobao.micro.common.domain.PageVO;
+import com.baobao.micro.domain.dto.GoodsDTO;
 import com.baobao.micro.domain.entity.Goods;
 import com.baobao.micro.domain.query.GoodsQuery;
 import com.baobao.micro.domain.to.GoodsAddTO;
@@ -60,4 +61,11 @@ public interface GoodsService extends IService<Goods> {
      * @return 导入校验失败信息
      */
     List<ErrorMessage> importGoods(List<GoodsExcelVO> excelVOList);
+
+    /**
+     * 远程接口查询商品信息
+     * @param goodsId 商品id
+     * @return dto
+     */
+    GoodsDTO getDTO(Long goodsId);
 }

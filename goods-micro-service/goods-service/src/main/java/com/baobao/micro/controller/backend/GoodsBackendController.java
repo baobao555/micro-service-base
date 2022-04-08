@@ -32,7 +32,7 @@ import java.util.Set;
  * @description
  */
 @RestController
-@RequestMapping("backend/goods")
+@RequestMapping("backend")
 @Validated
 @Api(tags = "商品接口-后台")
 public class GoodsBackendController {
@@ -77,6 +77,7 @@ public class GoodsBackendController {
 
     @PostMapping("import")
     @ApiOperation("导入商品")
+    @Idempotent(expireTime = 5)
     public Result<List<ErrorMessage>> importGoods(@RequestExcel List<GoodsExcelVO> excelVOList, BindingResult bindingResult) {
         List<ErrorMessage> basicErrorMessageList = (List<ErrorMessage>) bindingResult.getTarget();
         if (CollUtil.isNotEmpty(excelVOList)) {

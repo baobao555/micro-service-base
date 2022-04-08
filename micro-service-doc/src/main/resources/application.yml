@@ -1,0 +1,17 @@
+server:
+  port: 9010
+
+knife4j:
+  enableAggregation: true
+  nacos:
+    enable: true  # 开启Nacos模式
+    serviceUrl: http://localhost:8848/nacos # Nacos注册中心地址
+    routes:
+      - name: 商品微服务  # 微服务在聚合文档中的名称
+        serviceName: GOODS-SERVICE  # 微服务在Nacos注册中心的名称
+        location: /v2/api-docs # 微服务文档资源路径
+        servicePath: /gateway/goods # 给每个接口添加路径前缀，作用是拼接出经过nginx和gateway处理前的实际接口url
+      - name: 订单微服务
+        serviceName: ORDER-SERVICE
+        location: /v2/api-docs
+        servicePath: /gateway/order

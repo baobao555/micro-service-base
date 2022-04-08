@@ -22,5 +22,5 @@ public class MinioProperties {
     /**文件临时访问url过期时间(秒)*/
     private Integer tempUrlExpire;
     /**前端直传url过期时间(秒)*/
-    private Integer directUploadUrlExpire;
+    private Integer directUploadExpire;
 }

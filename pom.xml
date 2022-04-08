@@ -11,6 +11,9 @@
     <modules>
         <module>service-common</module>
         <module>goods-micro-service</module>
+        <module>order-micro-service</module>
+        <module>micro-service-doc</module>
+        <module>micro-service-gateway</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @description
  */
 @RestController
-@RequestMapping("app/goods")
+@RequestMapping("app")
 @Validated
 @Api(tags = "商品接口-app")
 public class GoodsAppController {

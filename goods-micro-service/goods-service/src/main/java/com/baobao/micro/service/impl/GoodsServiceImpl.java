@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baobao.micro.common.domain.PageVO;
+import com.baobao.micro.domain.dto.GoodsDTO;
 import com.baobao.micro.domain.entity.Goods;
 import com.baobao.micro.domain.enums.GoodsTypeEnum;
 import com.baobao.micro.domain.query.GoodsQuery;
@@ -115,5 +116,11 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         // 批量保存
         this.saveBatch(goodsList);
         return errorMessageList;
+    }
+
+    @Override
+    public GoodsDTO getDTO(Long goodsId) {
+        Goods goods = this.getById(goodsId);
+        return GoodsDTO.builder().goodsId(goodsId).goodsName(goods.getName()).build();
     }
 }

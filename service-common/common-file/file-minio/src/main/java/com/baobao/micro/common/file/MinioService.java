@@ -5,6 +5,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
+import io.minio.PostPolicy;
 import io.minio.PutObjectArgs;
 import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -39,17 +43,7 @@ public class MinioService {
      * @return 上传成功后文件在bucket中的相对路径，上传失败返回null
      */
     public String upload(InputStream in, String dir, String originFileName, String contentType, int fileSize) {
-        // 随机化文件名
-        String uuid = UUID.randomUUID().toString(true);
-        String fileName = StrUtil.addPrefixIfNot(originFileName, uuid);
-        String rootPath;
-        if (StrUtil.isEmpty(dir)) {
-            rootPath = "";
-        }else {
-            rootPath = dir.endsWith("/") ? dir : dir + "/";
-        }
-        // 将文件散列到日期目录
-        String finalPath = rootPath + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName;
+        String finalPath = generateFilePath(dir, originFileName);
         try {
             PutObjectArgs putObjectArgs = PutObjectArgs.builder().bucket(minioProperties.getBucket()).object(finalPath)
                     .contentType(contentType)
@@ -61,6 +55,26 @@ public class MinioService {
             log.error("文件上传失败", e);
             return null;
         }
+    }
+
+    /**
+     * 根据原始文件名生成随机化文件名，并散列到日期目录中
+     * @param dir 上传到bucket哪个目录，开头不要加/
+     * @param originFileName 原始文件名
+     * @return 最终生成的文件在bucket中的路径
+     */
+    private String generateFilePath(String dir, String originFileName) {
+        // 随机化文件名
+        String uuid = UUID.randomUUID().toString(true);
+        String fileName = StrUtil.addPrefixIfNot(originFileName, uuid);
+        String rootPath;
+        if (StrUtil.isEmpty(dir)) {
+            rootPath = "";
+        }else {
+            rootPath = dir.endsWith("/") ? dir : dir + "/";
+        }
+        // 将文件散列到日期目录
+        return rootPath + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName;
     }
 
     /**
@@ -96,11 +110,11 @@ public class MinioService {
     }
 
     /**
-     * 获取前端直传url
+     * 获取PUT方式前端直传url
      * @param path 文件在bucket中的相对路径
-     * @return 前端直传临时url
+     * @return PUT方式前端直传临时url
      */
-    public String getDirectUploadUrl(String path) {
+    public String getPutDirectUploadUrl(String path) {
         if (StrUtil.isBlank(path)) {
             return null;
         }
@@ -108,7 +122,7 @@ public class MinioService {
                 .bucket(minioProperties.getBucket())
                 .object(path)
                 .method(Method.PUT)
-                .expiry(minioProperties.getDirectUploadUrlExpire(), TimeUnit.SECONDS)
+                .expiry(minioProperties.getDirectUploadExpire(), TimeUnit.SECONDS)
                 .build();
         try {
             return minioClient.getPresignedObjectUrl(presignedObjectUrlArgs);
@@ -116,5 +130,43 @@ public class MinioService {
             log.error("获取前端直传临时url失败", e);
             return null;
         }
+    }
+
+    /**
+     * 获取POST方式前端直传预签名信息
+     * @param path 文件在bucket中的相对路径
+     * @return 前端直传预签名信息
+     */
+    public Map<String, String> getPostDirectUploadPresignedInfo(String path) {
+        // 创建一个上传策略
+        PostPolicy policy = new PostPolicy(minioProperties.getBucket(), ZonedDateTime.now().plusSeconds(minioProperties.getDirectUploadExpire()));
+        // 设置一个参数key，值为上传对象的名称
+        policy.addEqualsCondition("key", path);
+        // 添加Content-Type以"image/"开头，表示只能上传照片
+        // policy.addStartsWithCondition("Content-Type", "image/");
+        // 设置上传文件的大小 64kiB to 10MiB.
+        // policy.addContentLengthRangeCondition(64 * 1024, 10 * 1024 * 1024);
+        try {
+            Map<String, String> map = minioClient.getPresignedPostFormData(policy);
+            // 将文件在bucket中的最终路径回传给前端
+            map.put("key", path);
+            // 将上传url传递给前端
+            map.put("url", minioProperties.getEndpoint() + "/" + minioProperties.getBucket());
+            return map;
+        } catch (Exception e) {
+            log.error("获取前端直传预签名信息失败", e);
+            return Collections.emptyMap();
+        }
+    }
+
+    /**
+     * 获取post前端直传预签名信息
+     * @param dir 上传到bucket哪个目录，开头不要加/
+     * @param originFileName 文件原始名称
+     * @return 预签名信息
+     */
+    public Map<String, String> getUploadPresignedInfo(String dir, String originFileName) {
+        String filePath = this.generateFilePath(dir, originFileName);
+        return this.getPostDirectUploadPresignedInfo(filePath);
     }
 }
