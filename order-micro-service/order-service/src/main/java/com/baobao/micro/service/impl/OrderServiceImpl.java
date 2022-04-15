@@ -4,10 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baobao.micro.common.domain.PageVO;
-import com.baobao.micro.domain.dto.GoodsDTO;
+import com.baobao.micro.domain.dto.GoodsFeignDTO;
 import com.baobao.micro.domain.entity.Order;
 import com.baobao.micro.domain.query.OrderQuery;
-import com.baobao.micro.domain.to.OrderCommitTO;
+import com.baobao.micro.domain.dto.OrderCommitTO;
 import com.baobao.micro.domain.vo.backend.OrderListVO;
 import com.baobao.micro.feign.GoodsFeignApi;
 import com.baobao.micro.mapper.OrderMapper;
@@ -36,11 +36,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         // 生成订单号
         String orderNo = RandomUtil.randomNumbers(10);
         // 远程接口查询商品信息
-        GoodsDTO goodsDTO = goodsFeignApi.get(to.getGoodsId());
+        GoodsFeignDTO goodsDTO = goodsFeignApi.get(to.getGoodsId());
         // 保存订单信息
         Order order = BeanUtil.copyProperties(to, Order.class);
         order.setOrderNo(orderNo);
-        order.setGoodsName(goodsDTO.getGoodsName());
+        order.setGoodsName(goodsDTO.getName());
         order.setOrderTime(new Date());
         this.save(order);
     }

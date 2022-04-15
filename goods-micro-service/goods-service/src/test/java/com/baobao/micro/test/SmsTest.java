@@ -20,6 +20,10 @@ public class SmsTest {
 
     @Test
     public void testAliyunSms() {
-        aliyunSmsService.sendSms("", "", "", "");
+        try {
+            aliyunSmsService.sendSms("", "", "", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

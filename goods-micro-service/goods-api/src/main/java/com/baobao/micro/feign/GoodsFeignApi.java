@@ -1,6 +1,6 @@
 package com.baobao.micro.feign;
 
-import com.baobao.micro.domain.dto.GoodsDTO;
+import com.baobao.micro.domain.dto.GoodsFeignDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,5 +18,5 @@ public interface GoodsFeignApi {
      * @return 商品信息dto
      */
     @GetMapping("feign/{goodsId}")
-    GoodsDTO get(@PathVariable("goodsId") Long goodsId);
+    GoodsFeignDTO get(@PathVariable("goodsId") Long goodsId);
 }

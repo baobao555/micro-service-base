@@ -2,14 +2,15 @@ package com.baobao.micro.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baobao.micro.common.domain.PageVO;
-import com.baobao.micro.domain.dto.GoodsDTO;
+import com.baobao.micro.domain.dto.GoodsFeignDTO;
 import com.baobao.micro.domain.entity.Goods;
-import com.baobao.micro.domain.enums.GoodsTypeEnum;
+import com.baobao.micro.enums.GoodsTypeEnum;
 import com.baobao.micro.domain.query.GoodsQuery;
-import com.baobao.micro.domain.to.GoodsAddTO;
-import com.baobao.micro.domain.to.GoodsUpdateTO;
+import com.baobao.micro.domain.dto.GoodsAddDTO;
+import com.baobao.micro.domain.dto.GoodsUpdateDTO;
 import com.baobao.micro.domain.vo.backend.GoodsExcelVO;
 import com.baobao.micro.domain.vo.backend.GoodsListVO;
 import com.baobao.micro.mapper.GoodsMapper;
@@ -24,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -41,16 +39,24 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     private MicaRedisCache redisCache;
 
     @Override
-    public void add(GoodsAddTO to) {
+    public void add(GoodsAddDTO to) {
+        // 校验促销时间
+        Assert.isTrue(to.getPromotionStart().before(to.getPromotionEnd()), "促销开始时间不能大于结束时间");
         Goods goods = BeanUtil.copyProperties(to, Goods.class);
         this.save(goods);
     }
 
     @Override
-    public void update(Long id, GoodsUpdateTO to) {
-        Goods goods = BeanUtil.copyProperties(to, Goods.class);
-        goods.setId(id);
-        this.updateById(goods);
+    public void update(Long id, GoodsUpdateDTO to) {
+        Goods goods = this.getById(id);
+        Assert.notNull(goods, "要修改的商品不存在");
+        // 校验促销时间
+        Date promotionStart = to.getPromotionStart() == null ? goods.getPromotionStart() : to.getPromotionStart();
+        Date promotionEnd = to.getPromotionEnd() == null ? goods.getPromotionEnd() : to.getPromotionEnd();
+        Assert.isTrue(promotionStart.before(promotionEnd), "促销开始时间不能大于结束时间");
+        Goods updateGoods = BeanUtil.copyProperties(to, Goods.class);
+        updateGoods.setId(id);
+        this.updateById(updateGoods);
     }
 
     @Override
@@ -119,8 +125,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public GoodsDTO getDTO(Long goodsId) {
+    public GoodsFeignDTO getDTO(Long goodsId) {
         Goods goods = this.getById(goodsId);
-        return GoodsDTO.builder().goodsId(goodsId).goodsName(goods.getName()).build();
+        return BeanUtil.copyProperties(goods, GoodsFeignDTO.class);
     }
 }

@@ -1,7 +1,7 @@
 package com.baobao.micro.controller.app;
 
 import com.baobao.micro.common.domain.Result;
-import com.baobao.micro.domain.to.OrderCommitTO;
+import com.baobao.micro.domain.dto.OrderCommitTO;
 import com.baobao.micro.service.OrderService;
 import com.pig4cloud.plugin.idempotent.annotation.Idempotent;
 import io.swagger.annotations.Api;

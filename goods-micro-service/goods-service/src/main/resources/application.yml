@@ -44,8 +44,6 @@ minio:
   tempUrlExpire: 60
   directUploadExpire: 600
 
-
-
 # 另起文档，放与具体环境相关的配置(如数据库连接地址等等)
 ---
 spring:
@@ -63,7 +61,6 @@ spring:
     password: abc123
     database: 5
     port: 6379
-
 
 mybatis-plus:
   configuration:

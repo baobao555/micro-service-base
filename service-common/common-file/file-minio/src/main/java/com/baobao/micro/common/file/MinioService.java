@@ -1,6 +1,7 @@
 package com.baobao.micro.common.file;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import io.minio.GetPresignedObjectUrlArgs;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -42,19 +42,14 @@ public class MinioService {
      * @param fileSize 文件大小
      * @return 上传成功后文件在bucket中的相对路径，上传失败返回null
      */
-    public String upload(InputStream in, String dir, String originFileName, String contentType, int fileSize) {
+    public String upload(InputStream in, String dir, String originFileName, String contentType, int fileSize) throws Exception {
         String finalPath = generateFilePath(dir, originFileName);
-        try {
-            PutObjectArgs putObjectArgs = PutObjectArgs.builder().bucket(minioProperties.getBucket()).object(finalPath)
-                    .contentType(contentType)
-                    .stream(in, fileSize, -1)
-                    .build();
-            minioClient.putObject(putObjectArgs);
-            return finalPath;
-        } catch (Exception e) {
-            log.error("文件上传失败", e);
-            return null;
-        }
+        PutObjectArgs putObjectArgs = PutObjectArgs.builder().bucket(minioProperties.getBucket()).object(finalPath)
+                .contentType(contentType)
+                .stream(in, fileSize, -1)
+                .build();
+        minioClient.putObject(putObjectArgs);
+        return finalPath;
     }
 
     /**
@@ -83,7 +78,8 @@ public class MinioService {
      * @return 固定url
      */
     public String getFixAccessUrl(String path) {
-        return StrUtil.isBlank(path) ? null : minioProperties.getEndpoint() + "/" + minioProperties.getBucket() + "/" + path;
+        Assert.isTrue(StrUtil.isNotBlank(path), "路径不能为空");
+        return minioProperties.getEndpoint() + "/" + minioProperties.getBucket() + "/" + path;
     }
 
     /**
@@ -91,22 +87,15 @@ public class MinioService {
      * @param path 文件在bucket中的相对路径
      * @return 临时访问url
      */
-    public String getTempAccessUrl(String path) {
-        if (StrUtil.isBlank(path)) {
-            return null;
-        }
+    public String getTempAccessUrl(String path) throws Exception {
+        Assert.isTrue(StrUtil.isNotBlank(path), "路径不能为空");
         GetPresignedObjectUrlArgs presignedObjectUrlArgs = GetPresignedObjectUrlArgs.builder()
                 .bucket(minioProperties.getBucket())
                 .object(path)
                 .method(Method.GET)
                 .expiry(minioProperties.getTempUrlExpire(), TimeUnit.SECONDS)
                 .build();
-        try {
-            return minioClient.getPresignedObjectUrl(presignedObjectUrlArgs);
-        } catch (Exception e) {
-            log.error("获取文件临时访问url失败", e);
-            return null;
-        }
+        return minioClient.getPresignedObjectUrl(presignedObjectUrlArgs);
     }
 
     /**
@@ -114,22 +103,15 @@ public class MinioService {
      * @param path 文件在bucket中的相对路径
      * @return PUT方式前端直传临时url
      */
-    public String getPutDirectUploadUrl(String path) {
-        if (StrUtil.isBlank(path)) {
-            return null;
-        }
+    public String getPutDirectUploadUrl(String path) throws Exception {
+        Assert.isTrue(StrUtil.isNotBlank(path), "路径不能为空");
         GetPresignedObjectUrlArgs presignedObjectUrlArgs = GetPresignedObjectUrlArgs.builder()
                 .bucket(minioProperties.getBucket())
                 .object(path)
                 .method(Method.PUT)
                 .expiry(minioProperties.getDirectUploadExpire(), TimeUnit.SECONDS)
                 .build();
-        try {
-            return minioClient.getPresignedObjectUrl(presignedObjectUrlArgs);
-        } catch (Exception e) {
-            log.error("获取前端直传临时url失败", e);
-            return null;
-        }
+        return minioClient.getPresignedObjectUrl(presignedObjectUrlArgs);
     }
 
     /**
@@ -137,7 +119,8 @@ public class MinioService {
      * @param path 文件在bucket中的相对路径
      * @return 前端直传预签名信息
      */
-    public Map<String, String> getPostDirectUploadPresignedInfo(String path) {
+    public Map<String, String> getPostDirectUploadPresignedInfo(String path) throws Exception {
+        Assert.isTrue(StrUtil.isNotBlank(path), "路径不能为空");
         // 创建一个上传策略
         PostPolicy policy = new PostPolicy(minioProperties.getBucket(), ZonedDateTime.now().plusSeconds(minioProperties.getDirectUploadExpire()));
         // 设置一个参数key，值为上传对象的名称
@@ -146,17 +129,12 @@ public class MinioService {
         // policy.addStartsWithCondition("Content-Type", "image/");
         // 设置上传文件的大小 64kiB to 10MiB.
         // policy.addContentLengthRangeCondition(64 * 1024, 10 * 1024 * 1024);
-        try {
-            Map<String, String> map = minioClient.getPresignedPostFormData(policy);
-            // 将文件在bucket中的最终路径回传给前端
-            map.put("key", path);
-            // 将上传url传递给前端
-            map.put("url", minioProperties.getEndpoint() + "/" + minioProperties.getBucket());
-            return map;
-        } catch (Exception e) {
-            log.error("获取前端直传预签名信息失败", e);
-            return Collections.emptyMap();
-        }
+        Map<String, String> map = minioClient.getPresignedPostFormData(policy);
+        // 将文件在bucket中的最终路径回传给前端
+        map.put("key", path);
+        // 将上传url传递给前端
+        map.put("url", minioProperties.getEndpoint() + "/" + minioProperties.getBucket());
+        return map;
     }
 
     /**
@@ -165,7 +143,7 @@ public class MinioService {
      * @param originFileName 文件原始名称
      * @return 预签名信息
      */
-    public Map<String, String> getUploadPresignedInfo(String dir, String originFileName) {
+    public Map<String, String> getUploadPresignedInfo(String dir, String originFileName) throws Exception {
         String filePath = this.generateFilePath(dir, originFileName);
         return this.getPostDirectUploadPresignedInfo(filePath);
     }

@@ -3,7 +3,7 @@ package com.baobao.micro.service;
 import com.baobao.micro.common.domain.PageVO;
 import com.baobao.micro.domain.entity.Order;
 import com.baobao.micro.domain.query.OrderQuery;
-import com.baobao.micro.domain.to.OrderCommitTO;
+import com.baobao.micro.domain.dto.OrderCommitTO;
 import com.baobao.micro.domain.vo.backend.OrderListVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 

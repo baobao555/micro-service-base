@@ -1,8 +1,8 @@
 package com.baobao.micro.common.sms;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.cloud.spring.boot.context.condition.ConditionalOnAliCloudEndpoint;
 import com.alibaba.cloud.spring.boot.sms.ISmsService;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
@@ -33,12 +33,9 @@ public class AliyunSmsService {
      * @param phoneNumber 手机号
      * @param param 短信参数json串
      */
-    public void sendSms(String signName, String templateCode, String phoneNumber, String param) {
+    public void sendSms(String signName, String templateCode, String phoneNumber, String param) throws Exception {
         // 校验手机号
-        if (!Validator.isMobile(phoneNumber)) {
-            log.error(StrUtil.format("手机号{}不合法", phoneNumber));
-            return;
-        }
+        Assert.isTrue(Validator.isMobile(phoneNumber), "手机号{}不合法", phoneNumber);
         // 组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         // 必填:待发送手机号
@@ -49,11 +46,8 @@ public class AliyunSmsService {
         request.setTemplateCode(templateCode);
         // 可选:模板中的变量替换JSON串
         request.setTemplateParam(param);
-        try {
-            SendSmsResponse smsResponse = smsService.sendSmsRequest(request);
-        } catch (Exception e) {
-            log.error(StrUtil.format("{}短信发送失败", phoneNumber), e);
-        }
+        SendSmsResponse smsResponse = smsService.sendSmsRequest(request);
+        Assert.isTrue("OK".equals(smsResponse.getCode()), "手机号{}短信发送失败：{}", phoneNumber, smsResponse.getMessage());
     }
 
     /**
@@ -63,12 +57,9 @@ public class AliyunSmsService {
      * @param phoneNumbers 手机号集合
      * @param param 短信参数json串
      */
-    public void sendSms(String signName, String templateCode, List<String> phoneNumbers, String param) {
+    public void sendSms(String signName, String templateCode, List<String> phoneNumbers, String param) throws Exception {
         // 校验手机号，挑出正确的手机号
-        if (CollUtil.isEmpty(phoneNumbers)) {
-            log.error("手机号为空");
-            return;
-        }
+        Assert.isTrue(CollUtil.isNotEmpty(phoneNumbers), "手机号为空");
         String rightPhoneNumbers = phoneNumbers.stream().filter(Validator::isMobile).collect(Collectors.joining(","));
         // 组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
@@ -80,10 +71,7 @@ public class AliyunSmsService {
         request.setTemplateCode(templateCode);
         // 可选:模板中的变量替换JSON串
         request.setTemplateParam(param);
-        try {
-            SendSmsResponse sendSmsResponse = smsService.sendSmsRequest(request);
-        } catch (Exception e) {
-            log.error(StrUtil.format("{}短信发送失败", rightPhoneNumbers), e);
-        }
+        SendSmsResponse smsResponse = smsService.sendSmsRequest(request);
+        Assert.isTrue("OK".equals(smsResponse.getCode()), "手机号{}短信发送失败：{}", rightPhoneNumbers, smsResponse.getMessage());
     }
 }

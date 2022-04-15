@@ -48,6 +48,11 @@
             <artifactId>goods-api</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.baobao</groupId>
+            <artifactId>goods-common</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
     <!--SpringBoot打包插件-->

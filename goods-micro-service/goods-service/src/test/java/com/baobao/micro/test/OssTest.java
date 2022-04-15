@@ -31,7 +31,7 @@ public class OssTest {
     private MinioService minioService;
 
     @Test
-    public void testMinio() {
+    public void testMinio() throws Exception {
         String directUploadUrl = minioService.getPutDirectUploadUrl("111.xlsx");
         String tempAccessUrl = minioService.getTempAccessUrl("111.xlsx");
         // Map<String, String> postDirectUploadPresignedInfo = minioService.getPostDirectUploadPresignedInfo("aaa/111.xlsx");

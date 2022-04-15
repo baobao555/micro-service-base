@@ -1,6 +1,6 @@
 package com.baobao.micro.domain.query;
 
-import com.baobao.micro.domain.enums.GoodsTypeEnum;
+import com.baobao.micro.enums.GoodsTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

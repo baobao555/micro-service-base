@@ -1,10 +1,11 @@
 package com.baobao.micro.domain.vo.backend;
 
-import com.baobao.micro.domain.enums.GoodsTypeEnum;
+import com.baobao.micro.enums.GoodsTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -23,6 +24,15 @@ public class GoodsListVO {
 
     @ApiModelProperty("商品类型")
     private GoodsTypeEnum type;
+
+    @ApiModelProperty("商品价格")
+    private BigDecimal price;
+
+    @ApiModelProperty("促销开始时间")
+    private Date promotionStart;
+
+    @ApiModelProperty("促销结束时间")
+    private Date promotionEnd;
 
     @ApiModelProperty("生产日期")
     private Date productionDate;

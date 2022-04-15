@@ -4,8 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.baobao.micro.common.domain.PageVO;
 import com.baobao.micro.common.domain.Result;
 import com.baobao.micro.domain.query.GoodsQuery;
-import com.baobao.micro.domain.to.GoodsAddTO;
-import com.baobao.micro.domain.to.GoodsUpdateTO;
+import com.baobao.micro.domain.dto.GoodsAddDTO;
+import com.baobao.micro.domain.dto.GoodsUpdateDTO;
 import com.baobao.micro.domain.vo.backend.GoodsExcelVO;
 import com.baobao.micro.domain.vo.backend.GoodsListVO;
 import com.baobao.micro.service.GoodsService;
@@ -42,7 +42,7 @@ public class GoodsBackendController {
     @PostMapping
     @ApiOperation("添加商品")
     @Idempotent(expireTime = 5)
-    public Result<Void> add(@RequestBody @Valid GoodsAddTO to) {
+    public Result<Void> add(@RequestBody @Valid GoodsAddDTO to) {
         goodsService.add(to);
         return Result.success();
     }
@@ -50,7 +50,7 @@ public class GoodsBackendController {
     @PutMapping("{id}")
     @ApiOperation("修改商品")
     public Result<Void> update(@PathVariable("id") @ApiParam(value = "商品id", required = true) Long id,
-                               @RequestBody @Valid GoodsUpdateTO to) {
+                               @RequestBody @Valid GoodsUpdateDTO to) {
         goodsService.update(id, to);
         return Result.success();
     }

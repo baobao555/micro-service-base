@@ -1,6 +1,6 @@
 package com.baobao.micro.controller;
 
-import com.baobao.micro.domain.dto.GoodsDTO;
+import com.baobao.micro.domain.dto.GoodsFeignDTO;
 import com.baobao.micro.feign.GoodsFeignApi;
 import com.baobao.micro.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class GoodsFeignController implements GoodsFeignApi {
 
     @Override
     @GetMapping("{goodsId}")
-    public GoodsDTO get(@PathVariable("goodsId") Long goodsId) {
+    public GoodsFeignDTO get(@PathVariable("goodsId") Long goodsId) {
         return goodsService.getDTO(goodsId);
     }
 }

@@ -1,6 +1,7 @@
 package com.baobao.micro.common.file;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.cloud.spring.boot.context.condition.ConditionalOnAliCloudEndpoint;
 import com.alibaba.cloud.spring.boot.context.env.AliCloudProperties;
@@ -56,29 +57,23 @@ public class AliyunOssService {
         String endpoint = aliyunOssProperties.getEndpoint();
         Integer policyExpire = aliyunOssProperties.getPolicyExpire();
         String host = "https://" + bucketName + "." + endpoint;
-        try {
-            long expireEndTime = System.currentTimeMillis() + policyExpire * 1000;
-            Date expiration = new Date(expireEndTime);
-            // PostObject请求最大可支持的文件大小为5 GB，即CONTENT_LENGTH_RANGE为5*1024*1024*1024。
-            PolicyConditions policyConds = new PolicyConditions();
-            policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000);
-            policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, finalDir);
-            String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
-            byte[] binaryData = postPolicy.getBytes(StandardCharsets.UTF_8);
-            String encodedPolicy = BinaryUtil.toBase64String(binaryData);
-            String postSignature = ossClient.calculatePostSignature(postPolicy);
-
-            return AliyunOssPolicy.builder()
-                    .accessid(aliCloudProperties.getAccessKey())
-                    .policy(encodedPolicy)
-                    .signature(postSignature)
-                    .dir(finalDir)
-                    .host(host)
-                    .expire(String.valueOf(expireEndTime / 1000)).build();
-        } catch (Exception e) {
-            log.error("获取policy失败", e);
-            return null;
-        }
+        long expireEndTime = System.currentTimeMillis() + policyExpire * 1000;
+        Date expiration = new Date(expireEndTime);
+        // PostObject请求最大可支持的文件大小为5 GB，即CONTENT_LENGTH_RANGE为5*1024*1024*1024。
+        PolicyConditions policyConds = new PolicyConditions();
+        policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000);
+        policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, finalDir);
+        String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
+        byte[] binaryData = postPolicy.getBytes(StandardCharsets.UTF_8);
+        String encodedPolicy = BinaryUtil.toBase64String(binaryData);
+        String postSignature = ossClient.calculatePostSignature(postPolicy);
+        return AliyunOssPolicy.builder()
+                .accessid(aliCloudProperties.getAccessKey())
+                .policy(encodedPolicy)
+                .signature(postSignature)
+                .dir(finalDir)
+                .host(host)
+                .expire(String.valueOf(expireEndTime / 1000)).build();
     }
 
     /**
@@ -87,9 +82,7 @@ public class AliyunOssService {
      * @return 固定url
      */
     public String getFixAccessUrl(String path) {
-        if (StrUtil.isBlank(path)) {
-            return null;
-        }
+        Assert.isTrue(StrUtil.isNotBlank(path), "路径不能为空");
         String bucketName = aliyunOssProperties.getBucket();
         String endpoint = aliyunOssProperties.getEndpoint();
         return "https://" + bucketName + "." + endpoint + "/" + path;
@@ -101,9 +94,7 @@ public class AliyunOssService {
      * @return 临时url
      */
     public String getTempAccessUrl(String path) {
-        if (StrUtil.isBlank(path)) {
-            return null;
-        }
+        Assert.isTrue(StrUtil.isNotBlank(path), "路径不能为空");
         String bucketName = aliyunOssProperties.getBucket();
         Integer tempUrlExpire = aliyunOssProperties.getTempUrlExpire();
         // 设置URL过期时间

@@ -1,4 +1,4 @@
-package com.baobao.micro.domain.enums;
+package com.baobao.micro.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;

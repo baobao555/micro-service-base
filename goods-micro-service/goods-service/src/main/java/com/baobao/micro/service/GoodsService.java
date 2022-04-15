@@ -1,11 +1,11 @@
 package com.baobao.micro.service;
 
 import com.baobao.micro.common.domain.PageVO;
-import com.baobao.micro.domain.dto.GoodsDTO;
+import com.baobao.micro.domain.dto.GoodsFeignDTO;
 import com.baobao.micro.domain.entity.Goods;
 import com.baobao.micro.domain.query.GoodsQuery;
-import com.baobao.micro.domain.to.GoodsAddTO;
-import com.baobao.micro.domain.to.GoodsUpdateTO;
+import com.baobao.micro.domain.dto.GoodsAddDTO;
+import com.baobao.micro.domain.dto.GoodsUpdateDTO;
 import com.baobao.micro.domain.vo.backend.GoodsExcelVO;
 import com.baobao.micro.domain.vo.backend.GoodsListVO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -23,14 +23,14 @@ public interface GoodsService extends IService<Goods> {
      * 添加商品
      * @param to
      */
-    void add(GoodsAddTO to);
+    void add(GoodsAddDTO to);
 
     /**
      * 修改商品
      * @param id 商品id
      * @param to
      */
-    void update(Long id, GoodsUpdateTO to);
+    void update(Long id, GoodsUpdateDTO to);
 
     /**
      * 条件查询商品
@@ -67,5 +67,5 @@ public interface GoodsService extends IService<Goods> {
      * @param goodsId 商品id
      * @return dto
      */
-    GoodsDTO getDTO(Long goodsId);
+    GoodsFeignDTO getDTO(Long goodsId);
 }

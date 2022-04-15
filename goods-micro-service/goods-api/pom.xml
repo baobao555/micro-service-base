@@ -22,8 +22,9 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>com.baobao</groupId>
+            <artifactId>goods-common</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 </project>

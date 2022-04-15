@@ -25,8 +25,8 @@ public class GlobalExceptionHandler {
     /**
      * 自定义业务异常
      */
-    @ExceptionHandler(CustomException.class)
-    public Result<Void> handleCustomException(CustomException e) {
+    @ExceptionHandler(BusinessException.class)
+    public Result<Void> handleCustomException(BusinessException e) {
         return Result.error(e.getMessage());
     }
 
