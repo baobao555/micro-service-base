@@ -71,7 +71,7 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
-        <!--幂等-->
+        <!--防止重复提交-->
         <dependency>
             <groupId>com.pig4cloud.plugin</groupId>
             <artifactId>idempotent-spring-boot-starter</artifactId>

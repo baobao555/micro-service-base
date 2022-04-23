@@ -14,7 +14,7 @@
     <modules>
         <module>goods-service</module>
         <module>goods-api</module>
-        <module>goods-domain</module>
+        <module>goods-common</module>
     </modules>
 
     <properties>
