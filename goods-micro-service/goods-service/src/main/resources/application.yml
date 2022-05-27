@@ -21,6 +21,8 @@ spring:
   servlet:
     multipart:
       max-file-size: 10MB # 文件上传最大10M
+  liquibase:
+    change-log: classpath:liquibase/master.xml
 
 mybatis-plus:
   global-config:
@@ -43,6 +45,7 @@ minio:
   bucket: test
   tempUrlExpire: 60
   directUploadExpire: 600
+
 
 # 另起文档，放与具体环境相关的配置(如数据库连接地址等等)
 ---

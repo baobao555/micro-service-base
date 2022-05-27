@@ -1,14 +1,16 @@
 package com.baobao.micro.controller.backend;
 
+import com.baobao.micro.common.domain.PageParam;
 import com.baobao.micro.common.domain.PageVO;
 import com.baobao.micro.common.domain.Result;
 import com.baobao.micro.domain.query.OrderQuery;
 import com.baobao.micro.domain.vo.backend.OrderListVO;
-import com.baobao.micro.service.OrderService;
+import com.baobao.micro.service.backend.OrderBackendService;
+import com.baobao.micro.service.base.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,15 +28,13 @@ import javax.validation.constraints.Min;
 @RequestMapping("backend")
 @Validated
 @Api(tags = "订单接口-后台")
+@RequiredArgsConstructor
 public class OrderBackendController {
-    @Autowired
-    private OrderService orderService;
+    private final OrderBackendService orderService;
 
-    @GetMapping("listPage/{pageNum}/{pageSize}")
+    @GetMapping("page")
     @ApiOperation("分页条件查询订单")
-    public Result<PageVO<OrderListVO>> listPage(@PathVariable("pageNum") @Min(value = 1, message = "页码必须大于0") @ApiParam(value = "页码", required = true) Integer pageNum,
-                                                @PathVariable("pageSize") @Min(value = 1, message = "每页数据量必须大于0") @ApiParam(value = "每页数据量", required = true) Integer pageSize,
-                                                OrderQuery query) {
-        return Result.success(orderService.listPage(pageNum, pageSize, query));
+    public Result<PageVO<OrderListVO>> page(PageParam pageParam, OrderQuery query) {
+        return Result.success(orderService.page(pageParam, query));
     }
 }

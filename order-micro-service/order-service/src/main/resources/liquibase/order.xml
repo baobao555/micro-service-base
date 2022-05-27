@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+    <changeSet id="20220527初始化订单表" author="baobao">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <tableExists tableName="order"/>
+            </not>
+        </preConditions>
+        <createTable tableName="order" remarks="订单表">
+            <column name="id" type="bigint unsigned" remarks="主键" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="order_no" type="varchar(50)" remarks="订单号" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+            <column name="goods_id" type="bigint unsigned" remarks="商品id">
+                <constraints nullable="false"/>
+            </column>
+            <column name="goods_name" type="varchar(255)" remarks="商品名称" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+            <column name="buy_num" type="int unsigned" remarks="购买数量">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_time" type="datetime" remarks="下单时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="tinyint unsigned" defaultValueNumeric="0" remarks="逻辑删除字段"/>
+            <column name="create_time" type="datetime" remarks="创建时间"/>
+            <column name="update_time" type="datetime" remarks="更新时间"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

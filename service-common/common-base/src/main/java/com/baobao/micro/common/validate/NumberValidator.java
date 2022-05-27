@@ -1,6 +1,7 @@
 package com.baobao.micro.common.validate;
 
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.StrUtil;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -13,7 +14,7 @@ import javax.validation.ConstraintValidatorContext;
 public class NumberValidator implements ConstraintValidator<Number, String> {
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        if (value == null){
+        if (StrUtil.isBlank(value)){
             return true;
         }
         return Validator.isNumber(value);

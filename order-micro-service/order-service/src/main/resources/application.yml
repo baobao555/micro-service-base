@@ -21,6 +21,8 @@ spring:
   servlet:
     multipart:
       max-file-size: 10MB # 文件上传最大10M
+  liquibase:
+    change-log: classpath:liquibase/master.xml
 
 mybatis-plus:
   global-config:

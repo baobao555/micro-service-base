@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+    <changeSet id="20220527初始化商品表" author="baobao">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <tableExists tableName="goods"/>
+            </not>
+        </preConditions>
+        <createTable tableName="goods" remarks="商品表">
+            <column name="id" type="bigint unsigned" remarks="主键" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="商品名称" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="tinyint unsigned" remarks="商品类型：0手机，1电脑，2食品">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(10,2) unsigned" remarks="商品价格">
+                <constraints nullable="false"/>
+            </column>
+            <column name="promotion_start" type="datetime" remarks="促销开始时间"/>
+            <column name="promotion_end" type="datetime" remarks="促销结束时间"/>
+            <column name="production_date" type="datetime" remarks="促销结束时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="tinyint unsigned" defaultValueNumeric="0" remarks="逻辑删除字段"/>
+            <column name="create_time" type="datetime" remarks="创建时间"/>
+            <column name="create_by" type="varchar(255)" defaultValue="" remarks="创建人">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="datetime" remarks="更新时间"/>
+            <column name="update_by" type="varchar(255)" defaultValue="" remarks="更新人">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

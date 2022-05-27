@@ -2,7 +2,7 @@ package com.baobao.micro.common.swagger;
 
 import com.github.xiaoymin.knife4j.spring.configuration.Knife4jAutoConfiguration;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +27,9 @@ import javax.servlet.http.HttpSession;
 @EnableSwagger2WebMvc
 @ConditionalOnClass(Knife4jAutoConfiguration.class)
 @EnableConfigurationProperties(SwaggerProperties.class)
+@RequiredArgsConstructor
 public class SwaggerConfig {
-    @Autowired
-    private SwaggerProperties swaggerProperties;
+    private final SwaggerProperties swaggerProperties;
 
     @Bean
     public Docket webApiConfig() {

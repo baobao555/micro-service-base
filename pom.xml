@@ -30,8 +30,8 @@
         <maven.compiler.target>8</maven.compiler.target>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <hutool.version>5.7.22</hutool.version>
-        <spring.cloud.version>Hoxton.SR12</spring.cloud.version>
-        <spring.cloud.alibaba.version>2.2.0.RELEASE</spring.cloud.alibaba.version>
+        <spring.cloud.version>Hoxton.SR3</spring.cloud.version>
+        <spring.cloud.alibaba.version>2.2.1.RELEASE</spring.cloud.alibaba.version>
         <knife4j.version>2.0.9</knife4j.version>
         <mysql.driver.version>8.0.16</mysql.driver.version>
         <lombok.version>1.18.20</lombok.version>
@@ -43,6 +43,7 @@
         <idempotent.version>0.0.7</idempotent.version>
         <mica.version>2.1.1-GA</mica.version>
         <excel.version>1.1.1</excel.version>
+        <liquibase.version>4.10.0</liquibase.version>
     </properties>
 
     <dependencyManagement>
@@ -144,6 +145,12 @@
                 <groupId>com.pig4cloud.plugin</groupId>
                 <artifactId>idempotent-spring-boot-starter</artifactId>
                 <version>${idempotent.version}</version>
+            </dependency>
+            <!--数据库版本控制工具-->
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

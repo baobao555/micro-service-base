@@ -1,9 +1,9 @@
 package com.baobao.micro.test;
 
-import com.baobao.micro.common.sms.AliyunSmsService;
+import com.baobao.micro.sms.aliyun.AliyunSmsService;
+import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -14,9 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@RequiredArgsConstructor
 public class SmsTest {
-    @Autowired
-    private AliyunSmsService aliyunSmsService;
+    private final AliyunSmsService aliyunSmsService;
 
     @Test
     public void testAliyunSms() {

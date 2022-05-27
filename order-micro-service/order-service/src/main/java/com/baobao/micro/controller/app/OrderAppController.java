@@ -1,12 +1,12 @@
 package com.baobao.micro.controller.app;
 
 import com.baobao.micro.common.domain.Result;
-import com.baobao.micro.domain.dto.OrderCommitTO;
-import com.baobao.micro.service.OrderService;
+import com.baobao.micro.domain.dto.OrderCommitDTO;
+import com.baobao.micro.service.app.OrderAppService;
 import com.pig4cloud.plugin.idempotent.annotation.Idempotent;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,15 +24,15 @@ import javax.validation.Valid;
 @RequestMapping("app")
 @Validated
 @Api(tags = "订单接口-app")
+@RequiredArgsConstructor
 public class OrderAppController {
-    @Autowired
-    private OrderService orderService;
+    private final OrderAppService orderService;
 
     @PostMapping
     @ApiOperation("提交订单")
     @Idempotent(expireTime = 5)
-    public Result<Void> commit(@RequestBody @Valid OrderCommitTO to) {
-        orderService.commit(to);
+    public Result<Void> commit(@RequestBody @Valid OrderCommitDTO dto) {
+        orderService.commit(dto);
         return Result.success();
     }
 }

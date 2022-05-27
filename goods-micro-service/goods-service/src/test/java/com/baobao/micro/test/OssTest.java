@@ -1,9 +1,9 @@
 package com.baobao.micro.test;
 
-import com.baobao.micro.common.file.MinioService;
+import com.baobao.micro.file.minio.MinioService;
+import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -16,6 +16,7 @@ import java.util.Map;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@RequiredArgsConstructor
 public class OssTest {
     /*@Autowired
     private AliyunOssService aliyunOssService;
@@ -27,8 +28,7 @@ public class OssTest {
         String tempAccessUrl = aliyunOssService.getTempAccessUrl("guojia.jpg");
     }*/
 
-    @Autowired
-    private MinioService minioService;
+    private final MinioService minioService;
 
     @Test
     public void testMinio() throws Exception {

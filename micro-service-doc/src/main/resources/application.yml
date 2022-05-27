@@ -15,3 +15,7 @@ knife4j:
         serviceName: ORDER-SERVICE
         location: /v2/api-docs
         servicePath: /gateway/order
+      - name: 测试微服务
+        serviceName: TEST-SERVICE
+        location: /v2/api-docs
+        servicePath: /gateway/test

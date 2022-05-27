@@ -14,7 +14,7 @@ import javax.validation.ConstraintValidatorContext;
 public class IdCardValidator implements ConstraintValidator<IdCard, String>  {
     @Override
     public boolean isValid(String idCard, ConstraintValidatorContext constraintValidatorContext) {
-        if (idCard == null){
+        if (StrUtil.isBlank(idCard)){
             return true;
         }
         return IdcardUtil.isValidCard(idCard);
