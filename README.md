@@ -25,8 +25,8 @@
 
 项目地址如下，欢迎star和讨论：
 
-- gitee：https://gitee.com/coder-baobao/micro-service-base.git
-- github：https://github.com/baobao555/micro-service-base.git
+- gitee：https://gitee.com/coder-baobao/micro-service-base
+- github：https://github.com/baobao555/micro-service-base
 
 > 此项目只是一个微服务基本骨架示例，可能会有很多地方的封装、规范不成熟或者不适用与大家的具体项目环境。所以如果觉得项目中哪些地方封装的不好或者用的技术框架不合适，大家都可以克隆后自行直接修改为自己觉得合适的，这样灵活度最高
 
