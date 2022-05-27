@@ -25,8 +25,8 @@
 
 项目地址如下，欢迎star和讨论：
 
-- gitee：https://gitee.com/coder-baobao/micro-service-base
-- github：https://github.com/baobao555/micro-service-base
+- gitee：https://gitee.com/coder-baobao/micro-service-base.git
+- github：https://github.com/baobao555/micro-service-base.git
 
 > 此项目只是一个微服务基本骨架示例，可能会有很多地方的封装、规范不成熟或者不适用与大家的具体项目环境。所以如果觉得项目中哪些地方封装的不好或者用的技术框架不合适，大家都可以克隆后自行直接修改为自己觉得合适的，这样灵活度最高
 
@@ -98,18 +98,19 @@
 可运行的SpringBoot项目，微服务主要接口实现，几点规范如下：
 
 - 对于domain的划分如下：
-  - `dto`：前端调用controller添加、更新接口时传递数据的封装对象，区分添加数据和更新数据的前端提交数据的dto，因为添加和更新的字段很可能不一样
-  - `entity`：与数据库表字段一一对应的实体类，不可被其他类继承
-  - `query`：前端调用controller查询接口时传递的条件参数封装对象
-  - `vo`：查询接口返回给前端的视图对象。区分多端，app和backend分别代表app端和后台管理端，因为不通端的视图对象返回字段很可能不同。如果还有其他端，可以按需再扩展。对于后台管理端来说，一般页面上会先呈现列表数据，点击列表中某一条数据进入详情页面，列表和详情需要展示的字段很可能不同，所以区分了`ListVO`和`DetailVO`，另外一般情况下详情展示的字段比列表数据要多，所以`DetailVO`继承自`ListVO`
-- controller区分多端，app代表app端，backend代表后台管理端，因为不同端需要的接口不同，返回的数据也不同，这样做也能方便前端区分接口。如果还有其他端，可以按需扩展
+    - `dto`：前端调用controller添加、更新接口时传递数据的封装对象，区分添加数据和更新数据的前端提交数据的dto，因为添加和更新的字段很可能不一样
+    - `entity`：与数据库表字段一一对应的实体类，不可被其他类继承
+    - `query`：前端调用controller查询接口时传递的条件参数封装对象
+    - `vo`：查询接口返回给前端的视图对象。区分多端，app和backend分别代表app端和后台管理端，因为不通端的视图对象返回字段很可能不同。如果还有其他端，可以按需再扩展。对于后台管理端来说，一般页面上会先呈现列表数据，点击列表中某一条数据进入详情页面，列表和详情需要展示的字段很可能不同，所以区分了`ListVO`和`DetailVO`，另外一般情况下详情展示的字段比列表数据要多，所以`DetailVO`继承自`ListVO`
+- Controller区分多端，app代表app端，backend代表后台管理端，因为不同端需要的接口不同，返回的数据也不同，这样做也能方便前端区分接口。如果还有其他端，可以按需扩展
+- Service也和Controller一样区分多端，不同的是每个`entity`会有与之对应的一个基础Service(位于`service.base`包下)，完成一些基本的查询功能，返回的必须是与数据库表字段一一对应的`entity`，然后不同端的Service去注入各个表的基础Service来完成具体的业务功能。这样做即区分了不同端的Service，也可以有效避免不同业务Service之间出现循环依赖的情况
 - 前端提交参数的基本校验用hibernate-validator的注解。额外自定义校验在service层中，如果自定义校验失败用`Assert`断言来抛出异常
 
 
 
 ### 2.2 goods-api
 
-包含了该微服务自身可以被其他微服务调用的feign接口、返回数据DTO的定义，这样其他微服务如果想要通过feign远程调用该微服务的接口，只需要引入该模块即可，提现高内聚。其中feign接口的具体实现在`goods-service`模块中的controller包下，专门定义一个controller实现feign接口
+包含了该微服务自身可以被其他微服务调用的feign接口、返回数据DTO的定义，这样其他微服务如果想要通过feign远程调用该微服务的接口，只需要引入该模块即可，体现高内聚。其中feign接口的具体实现在`goods-service`模块中的controller包下，专门定义一个controller实现feign接口
 
 
 
@@ -141,7 +142,7 @@
 
 将项目克隆下来以后，使用的步骤如下：
 
-1. 创建数据库`goods`并执行`goods.sql`，创建数据库`order`并执行`order.sql`，然后将mysql和redis连接地址配置好，这样就可以直接运行微服务示例模块`goods-micro-service`和`order-micro-service`
+1. 创建数据库`goods`和`order`，然后将mysql和redis连接地址配置好，这样就可以直接运行微服务示例模块`goods-micro-service`和`order-micro-service`
 
 2. 参考微服务示例模块`goods-micro-service`和`order-micro-service`，创建自己的微服务模块，配置好数据库的连接地址，开发接口
 
@@ -150,8 +151,8 @@
    > - 自己的微服务模块至少要引入`common-base`依赖，里面包含了微服务所需的基本依赖。其他文件、短信的依赖按需引入即可
    >
    > - `common-base`包含我认为微服务标配的一些依赖，如果你的微服务确实不需要某些依赖，可以在引入`common-base`的同时排除掉指定依赖，比如不需要nacos配置中心，排除的代码如下：
-   >
-   >   ```xml
+       >
+       >   ```xml
    >   <dependency>
    >       <groupId>com.baobao</groupId>
    >       <artifactId>common-base</artifactId>
@@ -164,8 +165,6 @@
    >       </exclusions>
    >   </dependency>
    >   ```
-   >
-   > - 将包名`com.baobao.micro`修改为自己公司和项目时，要注意全局修改，保证Spring容器的包扫描
    >
    > - 日志配置可以参考示例模块下的`resources/logback-spring.xml`，对开发、测试、生产环境的日志做了不同配置
 
@@ -316,64 +315,8 @@ alibaba:
 
 在需要发送短信的地方注入`AliyunSmsService`即可，其提供了2个方法：
 
-```java
-@Service
-@Slf4j
-@ConditionalOnAliCloudEndpoint
-public class AliyunSmsService {
-    @Autowired
-    private ISmsService smsService;
-
-    /**
-     * 发送单条短信
-     * @param signName 短信签名
-     * @param templateCode 模板码
-     * @param phoneNumber 手机号
-     * @param param 短信参数json串
-     */
-    public void sendSms(String signName, String templateCode, String phoneNumber, String param) throws Exception {
-        // 校验手机号
-        Assert.isTrue(Validator.isMobile(phoneNumber), "手机号{}不合法", phoneNumber);
-        // 组装请求对象-具体描述见控制台-文档部分内容
-        SendSmsRequest request = new SendSmsRequest();
-        // 必填:待发送手机号
-        request.setPhoneNumbers(phoneNumber);
-        // 必填:短信签名-可在短信控制台中找到
-        request.setSignName(signName);
-        // 必填:短信模板-可在短信控制台中找到
-        request.setTemplateCode(templateCode);
-        // 可选:模板中的变量替换JSON串
-        request.setTemplateParam(param);
-        SendSmsResponse smsResponse = smsService.sendSmsRequest(request);
-        Assert.isTrue("OK".equals(smsResponse.getCode()), "手机号{}短信发送失败：{}", phoneNumber, smsResponse.getMessage());
-    }
-
-    /**
-     * 批量发送短信
-     * @param signName 短信签名
-     * @param templateCode 模板码
-     * @param phoneNumbers 手机号集合
-     * @param param 短信参数json串
-     */
-    public void sendSms(String signName, String templateCode, List<String> phoneNumbers, String param) throws Exception {
-        // 校验手机号，挑出正确的手机号
-        Assert.isTrue(CollUtil.isNotEmpty(phoneNumbers), "手机号为空");
-        String rightPhoneNumbers = phoneNumbers.stream().filter(Validator::isMobile).collect(Collectors.joining(","));
-        // 组装请求对象-具体描述见控制台-文档部分内容
-        SendSmsRequest request = new SendSmsRequest();
-        // 必填:待发送手机号
-        request.setPhoneNumbers(rightPhoneNumbers);
-        // 必填:短信签名-可在短信控制台中找到
-        request.setSignName(signName);
-        // 必填:短信模板-可在短信控制台中找到
-        request.setTemplateCode(templateCode);
-        // 可选:模板中的变量替换JSON串
-        request.setTemplateParam(param);
-        SendSmsResponse smsResponse = smsService.sendSmsRequest(request);
-        Assert.isTrue("OK".equals(smsResponse.getCode()), "手机号{}短信发送失败：{}", rightPhoneNumbers, smsResponse.getMessage());
-    }
-}
-```
+- `public void sendSms(String signName, String templateCode, String phoneNumber, String param)`：给单个号码发送短信
+- `public void sendSms(String signName, String templateCode, List<String> phoneNumbers, String param)`：给多个号码批量发送短信
 
 
 
@@ -412,14 +355,17 @@ alibaba:
 @RequestMapping("aliOss")
 @Validated
 @Api(tags = "阿里云对象存储服务接口")
+@RequiredArgsConstructor
 public class AliyunOssController {
-    @Autowired
-    private AliyunOssService aliyunOssService;
+    private final AliyunOssService aliyunOssService;
 
     @ApiOperation("获取文件上传预签名信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "dir", value = "上传到哪个子目录", paramType = "query")
+    })
     @GetMapping("policy")
-    public Result<AliyunOssPolicy> getPolicy() {
-        return Result.success(aliyunOssService.getPolicy(""));
+    public Result<AliyunOssPolicy> getPolicy(String dir) {
+        return Result.success(aliyunOssService.getPolicy(dir));
     }
 
     @ApiOperation("获取文件访问固定url(需要将bucket权限设置为公共)")
@@ -474,16 +420,19 @@ minio:
 @Validated
 @Api(tags = "minio文件服务接口")
 @Slf4j
+@RequiredArgsConstructor
 public class MinioController {
-    @Autowired
-    private MinioService minioService;
+    private final MinioService minioService;
 
     @ApiOperation("获取文件上传预签名信息")
-    @ApiImplicitParams({@ApiImplicitParam(name = "fileName", value = "原始文件名", dataType = "string", paramType = "query", required = true)})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fileName", value = "原始文件名", paramType = "query", required = true),
+            @ApiImplicitParam(name = "dir", value = "上传到哪个子目录", paramType = "query")
+    })
     @GetMapping("preSignedInfo")
-    public Result<Map<String, String>> getPresignedInfo(@NotBlank(message = "文件名不能为空") String fileName) {
+    public Result<Map<String, String>> getPresignedInfo(String dir, @NotBlank(message = "文件名不能为空") String fileName) {
         try {
-            return Result.success(minioService.getUploadPresignedInfo("", fileName));
+            return Result.success(minioService.getUploadPresignedInfo(dir, fileName));
         } catch (Exception e) {
             log.error("获取文件上传预签名信息失败", e);
             throw new BusinessException("获取文件上传预签名信息失败");
@@ -546,11 +495,3 @@ knife4j:
 
 
 具体使用方式可以参考教程：https://baobao555.tech/archives/50
-
-# 后续计划
-- 增加基础用户认证、权限控制模块
-- 整合分布式定时任务
-- 整合微信登录
-- 整合支付宝、微信支付
-- 添加前端演示页面
->因工作比较忙，更新会比较龟速，不好意思哈哈
