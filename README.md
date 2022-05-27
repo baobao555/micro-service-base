@@ -149,10 +149,8 @@
    > 注意：
    >
    > - 自己的微服务模块至少要引入`common-base`依赖，里面包含了微服务所需的基本依赖。其他文件、短信的依赖按需引入即可
-   >
    > - `common-base`包含我认为微服务标配的一些依赖，如果你的微服务确实不需要某些依赖，可以在引入`common-base`的同时排除掉指定依赖，比如不需要nacos配置中心，排除的代码如下：
-       >
-       >   ```xml
+   >   ```xml
    >   <dependency>
    >       <groupId>com.baobao</groupId>
    >       <artifactId>common-base</artifactId>
@@ -165,7 +163,6 @@
    >       </exclusions>
    >   </dependency>
    >   ```
-   >
    > - 日志配置可以参考示例模块下的`resources/logback-spring.xml`，对开发、测试、生产环境的日志做了不同配置
 
 3. 修改`micro-service-gateway`配置，将自己的微服务加入网关路由
